@@ -1,0 +1,6 @@
+#back {
+  transition: all 0.4s ease-in-out;
+}
+#board {
+  background-color: rgb(214, 135, 135);
+}

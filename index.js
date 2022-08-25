@@ -1,21 +1,37 @@
 function APP() {
   const [recipe, setRecipe] = React.useState([]);
   const [randomRecipe, setRandomRecipe] = React.useState([]);
-  /* const [color, setColor] = React.useState("#5B5EA6");*/
-
+  const [color, setColor] = React.useState("#5B5EA6");
+  const [previousIndex, setPreviousIndex] = React.useState([0, 1]);
   React.useEffect(() => {
     async function fetchData() {
       const response = await fetch("/recipeData.json");
       const data = await response.json();
-      setRecipe(await data.recipes);
-      let index = Math.floor(Math.random() * (await data.recipes.length));
-      console.log([data.recipes[index]]);
-      setRandomRecipe(data.recipes[index]);
+      const filteredData = await data.recipes.filter((item) => {
+        if (
+          item.analyzedInstructions &&
+          item.extendedIngredients &&
+          item.image
+        ) {
+          if (item.analyzedInstructions[0]) {
+            if (item.analyzedInstructions[0].steps) {
+              return true;
+            }
+          }
+        }
+        return false;
+      });
+      console.log(filteredData);
+      setRecipe(await filteredData);
+      let index = Math.floor(Math.random() * (await filteredData.length));
+      console.log([filteredData[index]]);
+      setPreviousIndex([previousIndex[1], index]);
+      setRandomRecipe(await filteredData[index]);
     }
     fetchData();
   }, []);
   function changeRecipe() {
-    /*const colors = [
+    const colors = [
       "#34568B",
       "#FF6F61",
       "#6B5B95",
@@ -28,26 +44,33 @@ function APP() {
       "#D65076",
       "#98B4D4",
     ];
-
-    let cIndex = Math.floor(Math.random() * colors.length);
-    setColor(colors[cIndex]);*/
     let index = Math.floor(Math.random() * recipe.length);
+    if (index == previousIndex[0] || index == previousIndex[1]) {
+      changeRecipe();
+      return;
+    }
+    setPreviousIndex([previousIndex[1], index]);
     setRandomRecipe(recipe[index]);
+    let cIndex = Math.floor(Math.random() * colors.length);
+    setColor(colors[cIndex]);
   }
 
   return (
-    <div style={{ minHeight: "100vh" }} id="back">
+    <div
+      style={{ backgroundColor: color, minHeight: "150vh", width: "100%" }}
+      id="back"
+    >
       <div className="container pt-5 ">
-        <div className="p-5 mb-4 rounded-3 " id="bord">
+        <div className="p-4 mb-4 rounded-3 " id="board">
           <div className="card">
             <div className="card-header">
-              <h6 className="text-center">Random Recipe Generator</h6>
+              <h6 className="text-center fw-bold">Random Recipe Generator</h6>
             </div>
             <div className="card-body ">
               <div className="text-center">
                 {randomRecipe ? (
                   <>
-                    <h5 className="card-title text-center">
+                    <h5 className="card-title text-center fw-bold">
                       {randomRecipe.title}
                     </h5>
                     <img
@@ -74,9 +97,9 @@ function APP() {
                     class="btn btn-success p-2  "
                     type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target="#collapseExample"
+                    data-bs-target="#ingredients"
                     aria-expanded="false"
-                    aria-controls="collapseExample"
+                    aria-controls="ingredients"
                   >
                     <span>
                       <h4>Ingredients</h4>{" "}
@@ -84,7 +107,7 @@ function APP() {
                     <i className="fa-solid fa-2x fa-arrow-down "></i>
                   </button>
                 </div>
-                <div class="collapse" id="collapseExample">
+                <div class="collapse" id="ingredients">
                   <div class="card card-body ">
                     <ul>
                       {randomRecipe.extendedIngredients
@@ -93,6 +116,38 @@ function APP() {
                           })
                         : "ok"}
                     </ul>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="d-grid gap-2 ">
+                  <button
+                    class="btn btn-danger p-2  mt-1"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#steps"
+                    aria-expanded="false"
+                    aria-controls="steps"
+                  >
+                    <span>
+                      <h4>Recipe</h4>{" "}
+                    </span>
+                    <i className="fa-solid fa-2x fa-arrow-down "></i>
+                  </button>
+                </div>
+                <div class="collapse" id="steps">
+                  <div class="card card-body ">
+                    <ol>
+                      {randomRecipe.analyzedInstructions
+                        ? randomRecipe.analyzedInstructions[0].steps
+                          ? randomRecipe.analyzedInstructions[0].steps.map(
+                              (item) => {
+                                return <li>{item.step}</li>;
+                              }
+                            )
+                          : "ok"
+                        : "ok"}
+                    </ol>
                   </div>
                 </div>
               </div>
