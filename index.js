@@ -59,7 +59,7 @@ function APP() {
 
   return (
     <div
-      style={{ backgroundColor: color, minHeight: "150vh", width: "100%" }}
+      style={{ backgroundColor: color, minHeight: "300vh", width: "100%" }}
       id="back"
     >
       <div className="container pt-5 ">
