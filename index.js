@@ -6,7 +6,7 @@ function APP() {
   React.useEffect(() => {
     async function fetchData() {
       const response = await fetch(
-        "https://raw.githubusercontent.com/julian-deca/randomRecipePage/main/recipeData.json"
+        "https://julian-deca.github.io/randomRecipePage/recipeData.json"
       );
       const data = await response.json();
       const filteredData = await data.recipes.filter((item) => {
