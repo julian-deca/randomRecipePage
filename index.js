@@ -5,7 +5,9 @@ function APP() {
   const [previousIndex, setPreviousIndex] = React.useState([0, 1]);
   React.useEffect(() => {
     async function fetchData() {
-      const response = await fetch("/recipeData.json");
+      const response = await fetch(
+        "https://raw.githubusercontent.com/julian-deca/randomRecipePage/main/recipeData.json"
+      );
       const data = await response.json();
       const filteredData = await data.recipes.filter((item) => {
         if (
