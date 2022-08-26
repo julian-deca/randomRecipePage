@@ -6,10 +6,10 @@ function APP() {
   React.useEffect(() => {
     async function fetchData() {
       const response = await fetch(
-        "https://julian-deca.github.io/randomRecipePage/fileteredRecipeData.json"
+        "https://julian-deca.github.io/randomRecipePage/filteredRecipeData.json"
       );
       const data = await response.json();
-      console.log(data);
+      console.log(await data);
       setRecipe(await data);
       let index = Math.floor(Math.random() * (await data.length));
       console.log([data[index]]);
@@ -98,9 +98,11 @@ function APP() {
                 <div class="collapse" id="ingredients">
                   <div class="card card-body ">
                     <ul>
-                      {randomRecipe.ingredients.map((item) => {
-                        return <li>{item.original}</li>;
-                      })}
+                      {randomRecipe.ingredients
+                        ? randomRecipe.ingredients.map((item) => {
+                            return <li>{item.original}</li>;
+                          })
+                        : "loading..."}
                     </ul>
                   </div>
                 </div>
@@ -124,9 +126,11 @@ function APP() {
                 <div class="collapse" id="steps">
                   <div class="card card-body ">
                     <ol>
-                      {randomRecipe.steps.map((item) => {
-                        return <li>{item.step}</li>;
-                      })}
+                      {randomRecipe.steps
+                        ? randomRecipe.steps.map((item) => {
+                            return <li>{item.step}</li>;
+                          })
+                        : "loading..."}
                     </ol>
                   </div>
                 </div>
