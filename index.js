@@ -6,29 +6,15 @@ function APP() {
   React.useEffect(() => {
     async function fetchData() {
       const response = await fetch(
-        "https://julian-deca.github.io/randomRecipePage/recipeData.json"
+        "https://julian-deca.github.io/randomRecipePage/fileteredRecipeData.json"
       );
       const data = await response.json();
-      const filteredData = await data.recipes.filter((item) => {
-        if (
-          item.analyzedInstructions &&
-          item.extendedIngredients &&
-          item.image
-        ) {
-          if (item.analyzedInstructions[0]) {
-            if (item.analyzedInstructions[0].steps) {
-              return true;
-            }
-          }
-        }
-        return false;
-      });
-      console.log(filteredData);
-      setRecipe(await filteredData);
-      let index = Math.floor(Math.random() * (await filteredData.length));
-      console.log([filteredData[index]]);
+      console.log(data);
+      setRecipe(await data);
+      let index = Math.floor(Math.random() * (await data.length));
+      console.log([data[index]]);
       setPreviousIndex([previousIndex[1], index]);
-      setRandomRecipe(await filteredData[index]);
+      setRandomRecipe(await data[index]);
     }
     fetchData();
   }, []);
@@ -73,7 +59,7 @@ function APP() {
                 {randomRecipe ? (
                   <>
                     <h5 className="card-title text-center fw-bold">
-                      {randomRecipe.title}
+                      {randomRecipe.name}
                     </h5>
                     <img
                       className="img-fluid img-thumbnail "
@@ -112,11 +98,9 @@ function APP() {
                 <div class="collapse" id="ingredients">
                   <div class="card card-body ">
                     <ul>
-                      {randomRecipe.extendedIngredients
-                        ? randomRecipe.extendedIngredients.map((item) => {
-                            return <li>{item.original}</li>;
-                          })
-                        : "ok"}
+                      {randomRecipe.ingredients.map((item) => {
+                        return <li>{item.original}</li>;
+                      })}
                     </ul>
                   </div>
                 </div>
@@ -140,15 +124,9 @@ function APP() {
                 <div class="collapse" id="steps">
                   <div class="card card-body ">
                     <ol>
-                      {randomRecipe.analyzedInstructions
-                        ? randomRecipe.analyzedInstructions[0].steps
-                          ? randomRecipe.analyzedInstructions[0].steps.map(
-                              (item) => {
-                                return <li>{item.step}</li>;
-                              }
-                            )
-                          : "ok"
-                        : "ok"}
+                      {randomRecipe.steps.map((item) => {
+                        return <li>{item.step}</li>;
+                      })}
                     </ol>
                   </div>
                 </div>
