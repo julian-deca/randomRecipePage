@@ -6,7 +6,7 @@ function APP() {
   React.useEffect(() => {
     async function fetchData() {
       const response = await fetch(
-        "https://julian-deca.github.io/randomRecipePage/filteredRecipeData.json"
+        "https://julian-deca.github.io/randomRecipePage/recipeData.json"
       );
       const data = await response.json();
       console.log(await data);
