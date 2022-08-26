@@ -79,64 +79,82 @@ function APP() {
                   <i className="fa-solid fa-2x fa-arrow-right "></i>
                 </button>
               </div>
-              <div>
-                <div className="d-grid gap-2 ">
-                  <button
-                    class="btn btn-success p-2  "
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#ingredients"
-                    aria-expanded="false"
-                    aria-controls="ingredients"
-                  >
-                    <span>
-                      <h4>Ingredients</h4>{" "}
-                    </span>
-                    <i className="fa-solid fa-2x fa-arrow-down "></i>
-                  </button>
-                </div>
-                <div class="collapse" id="ingredients">
-                  <div class="card card-body ">
-                    <ul>
-                      {randomRecipe.ingredients
-                        ? randomRecipe.ingredients.map((item) => {
-                            return <li>{item.original}</li>;
-                          })
-                        : "loading..."}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div className="d-grid gap-2 ">
-                  <button
-                    class="btn btn-danger p-2  mt-1"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#steps"
-                    aria-expanded="false"
-                    aria-controls="steps"
-                  >
-                    <span>
-                      <h4>Recipe</h4>{" "}
-                    </span>
-                    <i className="fa-solid fa-2x fa-arrow-down "></i>
-                  </button>
-                </div>
-                <div class="collapse" id="steps">
-                  <div class="card card-body ">
-                    <ol>
-                      {randomRecipe.steps
-                        ? randomRecipe.steps.map((item) => {
-                            return <li>{item.step}</li>;
-                          })
-                        : "loading..."}
-                    </ol>
-                  </div>
-                </div>
-              </div>
+              <Dropdown
+                prop="ingredients"
+                color="success"
+                maping="original"
+                order={false}
+                title="Ingredients"
+                randomRecipe={randomRecipe}
+              />
+              <Dropdown
+                prop="steps"
+                color="danger"
+                maping="step"
+                order={true}
+                title="Recipe"
+                randomRecipe={randomRecipe}
+              />
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+function Dropdown(props) {
+  const [arrowIcon, setArrowIcon] = React.useState(
+    "fa-solid fa-2x fa-arrow-down "
+  );
+
+  const changeArrow = async () => {
+    setArrowIcon((prev) => {
+      return prev == "fas fa-2x fa-arrow-up "
+        ? "fa-solid fa-2x fa-arrow-down "
+        : "fas fa-2x fa-arrow-up ";
+    });
+  };
+  return (
+    <div>
+      <div className="d-grid gap-2 ">
+        <button
+          class={"btn btn-" + props.color + " p-2  mt-1"}
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target={"#" + props.prop}
+          aria-expanded="false"
+          aria-controls={props.prop}
+          onClick={() => {
+            changeArrow();
+          }}
+        >
+          <span>
+            <h4>{props.title}</h4>{" "}
+          </span>
+          <i className={arrowIcon}></i>
+        </button>
+      </div>
+      <div class="collapse" id={props.prop}>
+        <div class="card card-body ">
+          {props.order ? (
+            <ol>
+              {" "}
+              {props.randomRecipe[props.prop]
+                ? props.randomRecipe[props.prop].map((item) => {
+                    return <li>{item[props.maping]}</li>;
+                  })
+                : "loading..."}
+            </ol>
+          ) : (
+            <ul>
+              {" "}
+              {props.randomRecipe[props.prop]
+                ? props.randomRecipe[props.prop].map((item) => {
+                    return <li>{item[props.maping]}</li>;
+                  })
+                : "loading..."}
+            </ul>
+          )}
         </div>
       </div>
     </div>
