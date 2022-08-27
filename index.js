@@ -9,10 +9,8 @@ function APP() {
         "https://julian-deca.github.io/randomRecipePage/recipeData.json"
       );
       const data = await response.json();
-      console.log(await data);
       setRecipe(await data);
       let index = Math.floor(Math.random() * (await data.length));
-      console.log([data[index]]);
       setPreviousIndex([previousIndex[1], index]);
       setRandomRecipe(await data[index]);
     }
@@ -141,7 +139,7 @@ function Dropdown(props) {
               {" "}
               {props.randomRecipe[props.prop]
                 ? props.randomRecipe[props.prop].map((item) => {
-                    return <li>{item[props.maping]}</li>;
+                    return <li>{item}</li>;
                   })
                 : "loading..."}
             </ol>
@@ -150,7 +148,7 @@ function Dropdown(props) {
               {" "}
               {props.randomRecipe[props.prop]
                 ? props.randomRecipe[props.prop].map((item) => {
-                    return <li>{item[props.maping]}</li>;
+                    return <li>{item}</li>;
                   })
                 : "loading..."}
             </ul>
